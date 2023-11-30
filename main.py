@@ -74,5 +74,4 @@ class EmailSender:
             for recipient in recipients:
                 server.sendmail(useremail, recipient, email_content)
 
-
 EmailSender()
