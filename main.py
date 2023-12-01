@@ -1,6 +1,7 @@
 import smtplib
 from tkinter import messagebox, ttk
 import tkinter as tk
+import speech_recognition as sr
 
 
 class EmailSender:
@@ -33,10 +34,17 @@ class EmailSender:
         self.email_list = tk.Text(self.root, height="2", font=("Arial", 18))
         self.email_list.pack()
 
-        self.email_content_label = ttk.Label(self.root, text="Enter Content of Email", font=("Arial", 12))
+        self.email_content_label = ttk.Label(self.root, text="Enter Content of Email or Record with Mic",
+                                             font=("Arial", 12))
         self.email_content_label.pack()
         self.email_content = tk.Text(self.root, height="2", font=("Arial", 18))
         self.email_content.pack()
+        self.record_button = ttk.Button(self.root, text="Record Email Content")
+        self.record_button.pack()
+        self.record_status = tk.Label(self.root, text=" ", font=("Arial", 12))
+
+        self.whitespace3 = ttk.Label(self.root, text="")
+        self.whitespace3.pack()
 
         self.number_emails_label = ttk.Label(self.root, text="How many Emails do you want to send?", font=("Arial", 13))
         self.number_emails_label.pack()
@@ -73,5 +81,6 @@ class EmailSender:
         for i in range(number_of_emails):
             for recipient in recipients:
                 server.sendmail(useremail, recipient, email_content)
+
 
 EmailSender()
