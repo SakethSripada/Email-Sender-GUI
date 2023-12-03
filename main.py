@@ -1,7 +1,8 @@
 import smtplib
 from tkinter import messagebox, ttk
 import tkinter as tk
-import speech_recognition as sr
+import threading
+import time
 
 
 class EmailSender:
@@ -34,14 +35,17 @@ class EmailSender:
         self.email_list = tk.Text(self.root, height="2", font=("Arial", 18))
         self.email_list.pack()
 
-        self.email_content_label = ttk.Label(self.root, text="Enter Content of Email or Record with Mic",
+        self.email_content_label = ttk.Label(self.root, text="Enter Content of Email",
                                              font=("Arial", 12))
         self.email_content_label.pack()
         self.email_content = tk.Text(self.root, height="2", font=("Arial", 18))
         self.email_content.pack()
-        self.record_button = ttk.Button(self.root, text="Record Email Content")
-        self.record_button.pack()
-        self.record_status = tk.Label(self.root, text=" ", font=("Arial", 12))
+
+        self.auto_send_label = ttk.Label(self.root, text="How often would you like the email to be automatically sent? "
+                                                         "(hours)", font=("Arial", 13))
+        self.auto_send_label.pack()
+        self.auto_send_entry = ttk.Entry(self.root, font=("Arial", 14))
+        self.auto_send_entry.pack()
 
         self.whitespace3 = ttk.Label(self.root, text="")
         self.whitespace3.pack()
@@ -81,6 +85,21 @@ class EmailSender:
         for i in range(number_of_emails):
             for recipient in recipients:
                 server.sendmail(useremail, recipient, email_content)
+
+    def auto_send(self):
+        try:
+            interval = float(self.auto_send_entry.get())
+        except ValueError:
+            messagebox.showerror("Please enter a valid number of hours")
+
+        def auto_send_wrapper():
+            while True:
+                self.send_emails()
+                time.sleep(interval*3600)
+
+        thread = threading.Thread(target=auto_send_wrapper)
+        thread.daemon = True
+        thread.start()
 
 
 EmailSender()
