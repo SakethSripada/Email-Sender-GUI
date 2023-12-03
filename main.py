@@ -86,20 +86,5 @@ class EmailSender:
             for recipient in recipients:
                 server.sendmail(useremail, recipient, email_content)
 
-    def auto_send(self):
-        try:
-            interval = float(self.auto_send_entry.get())
-        except ValueError:
-            messagebox.showerror("Please enter a valid number of hours")
-
-        def auto_send_wrapper():
-            while True:
-                self.send_emails()
-                time.sleep(interval*3600)
-
-        thread = threading.Thread(target=auto_send_wrapper)
-        thread.daemon = True
-        thread.start()
-
 
 EmailSender()
